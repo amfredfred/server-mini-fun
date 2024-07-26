@@ -28,7 +28,7 @@ function extractRelevantData(data: any[]) {
     return data?.map?.(item => ({
         account: item?.account,
         decimals: item?.onChainAccountInfo?.accountInfo?.data?.parsed?.info?.decimals,
-        supply: item?.onChainAccountInfo?.accountInfo?.data?.parsed?.info?.supply,
+        total_supply: item?.onChainAccountInfo?.accountInfo?.data?.parsed?.info?.supply,
         mintAuthority: item?.onChainAccountInfo?.accountInfo?.data?.parsed?.info?.mintAuthority,
         tokenStandard: item?.onChainMetadata?.metadata?.tokenStandard,
         updateAuthority: item?.onChainMetadata?.metadata?.updateAuthority,
