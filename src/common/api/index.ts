@@ -22,9 +22,10 @@ const formartResponse = (data: []) => data?.map(item => {
 })
 
 
-export async function getPumpList(params: URLSearchParams): Promise<IPumpCoin[]> {
-
-    const res = await axios.get(`https://gmgn.ai/defi/quotation/v1/rank/sol/pump?${params.toString()}`, { headers: { 'Cache-Control': 'no-store' } });
+export async function getPumpList(params: Object): Promise<IPumpCoin[]> {
+    const query = buildQueryParams({ limit: 20, orderby: 'usd_market_cap', direction: 'desc', pump: 'true', ...params })
+    console.log(query)
+    const res = await axios.get(`https://gmgn.ai/defi/quotation/v1/rank/sol/pump?${query}`, { headers: { 'Cache-Control': 'no-store' } });
     const data = res.data;
     return data.code === 0 ? data.data.rank : [];
 }
@@ -32,8 +33,6 @@ export async function getPumpList(params: URLSearchParams): Promise<IPumpCoin[]>
 export async function getGradiatedPumtList(params: Object) {
 
     const query = buildQueryParams({ type: 'CREATE_POOL', name: 'pump', sort: 'desc', ...params })
-
-    console.log(query)
     const API_URL = `https://api.helius.xyz/v0/addresses/${PUMPFUN_RAYDIUM_MIGRTION_PROGRAM_ID}/transactions?${query}`;
 
     try {

@@ -4,7 +4,7 @@ import { getGradiatedPumtList, getPumpList } from '../common/api';
 class PumpSocket {
     private io: Server;
     private intervalId: NodeJS.Timeout | null = null;
-    private searchParams = new Map<string, { listings: URLSearchParams, migrated: URLSearchParams }>();
+    private searchParams = new Map<string, { filter_listing: URLSearchParams, filter_migrated: URLSearchParams }>();
     private isBusy: boolean = false
 
     constructor(io: Server) {
@@ -14,8 +14,8 @@ class PumpSocket {
     }
 
     private onConnection(socket: Socket) {
-        socket.on('requestPumpList', async ({ listings, migrated }) => {
-            this.searchParams.set(socket.id, { listings, migrated });
+        socket.on('requestPumpList', async ({ filter_listing, filter_migrated }) => {
+            this.searchParams.set(socket.id, { filter_listing, filter_migrated });
             await this.sendPumpList();
         });
 
@@ -28,11 +28,11 @@ class PumpSocket {
     private async sendPumpList() {
         try {
             this.isBusy = true
-            for (const [socketId, { listings, migrated }] of this.searchParams.entries()) {
-                console.log({ socketId, listings, migrated })
+            for (const [socketId, { filter_listing, filter_migrated }] of this.searchParams.entries()) {
+                console.log({ socketId, filter_listing, filter_migrated })
                 const [pumpList, migratedPumpList] = await Promise.allSettled([
-                    getPumpList(listings),
-                    getGradiatedPumtList(migrated)
+                    getPumpList(filter_listing),
+                    getGradiatedPumtList(filter_migrated)
                 ])
                 const data = {}
                 if (pumpList.status === 'fulfilled')
