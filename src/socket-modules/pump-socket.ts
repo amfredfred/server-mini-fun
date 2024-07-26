@@ -1,5 +1,5 @@
 import { Server, Socket } from 'socket.io';
-import { getPumpList } from '../common/api';
+import { getGradiatedPumtList, getPumpList } from '../common/api';
 import ScrapingService from '../services/scraping-service';
 
 const defaultParams = {
@@ -13,7 +13,7 @@ const defaultParams = {
 class PumpSocket {
     private io: Server;
     private intervalId: NodeJS.Timeout | null = null;
-    private searchParams = new Map<string, URLSearchParams>();
+    private searchParams = new Map<string, { listings: URLSearchParams, migrated: URLSearchParams }>();
     private isBusy: boolean = false
 
     constructor(io: Server) {
@@ -23,9 +23,8 @@ class PumpSocket {
     }
 
     private onConnection(socket: Socket) {
-        socket.on('requestPumpList', async (search_params) => {
-            const params = new URLSearchParams(search_params || defaultParams);
-            this.searchParams.set(socket.id, params);
+        socket.on('requestPumpList', async ({ listings, migrated }) => {
+            this.searchParams.set(socket.id, { listings, migrated });
             await this.sendPumpList();
         });
 
@@ -38,10 +37,18 @@ class PumpSocket {
     private async sendPumpList() {
         try {
             this.isBusy = true
-            for (const [socketId, params] of this.searchParams.entries()) {
-                console.log({ socketId, params })
-                const pumpList = await getPumpList(params);
-                this.io.to(socketId).emit('pumpList', pumpList);
+            for (const [socketId, { listings, migrated }] of this.searchParams.entries()) {
+                console.log({ socketId, listings, migrated })
+                const [pumpList,] = await Promise.allSettled([
+                    getPumpList(listings),
+                    getGradiatedPumtList(migrated)
+                ])
+
+                const lists = {
+                    graduated: pumpList
+                }
+
+                this.io.to(socketId).emit('pumpList', lists);
             }
         } catch (error) {
             console.log(`Error@PumpSocket -> sendPumpList: ${error}`);

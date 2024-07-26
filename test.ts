@@ -17,7 +17,7 @@ const formartResponse = (data: []) => data?.map(item => {
     return {
         mint: item?.mint
     }
-})
+}) 
 
 async function fetchPumpFunTokens(limit = 10, sortBy = 'timestamp', sortOrder = 'desc', filters = {}) {
     const params = {
@@ -46,4 +46,4 @@ async function fetchPumpFunTokens(limit = 10, sortBy = 'timestamp', sortOrder = 
     }
 }
 
-fetchPumpFunTokens(1, 'timestamp', 'desc');//, { status: 'success' } 
+fetchPumpFunTokens(50, 'timestamp', 'desc');//, { status: 'success' } 

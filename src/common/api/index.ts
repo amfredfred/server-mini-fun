@@ -40,7 +40,7 @@ export async function getGradiatedPumtList(params: URLSearchParams) {
         console.error('Error fetching gradated pump list:', error);
         throw error;
     }
-}
+}  
 
 export async function getPumpDetail(addr: string): Promise<IPumpCoin> {
     const res = await axios.get(`https://gmgn.ai/defi/quotation/v1/tokens/sol/${addr}`);
