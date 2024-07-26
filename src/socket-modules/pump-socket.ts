@@ -1,14 +1,5 @@
 import { Server, Socket } from 'socket.io';
 import { getGradiatedPumtList, getPumpList } from '../common/api';
-import ScrapingService from '../services/scraping-service';
-
-const defaultParams = {
-    limit: '200',
-    orderby: 'usd_market_cap',
-    direction: 'desc',
-    pump: 'true',
-    usd_market_cap: '20'
-};
 
 class PumpSocket {
     private io: Server;
@@ -39,16 +30,19 @@ class PumpSocket {
             this.isBusy = true
             for (const [socketId, { listings, migrated }] of this.searchParams.entries()) {
                 console.log({ socketId, listings, migrated })
-                const [pumpList,] = await Promise.allSettled([
+                const [pumpList, migratedPumpList] = await Promise.allSettled([
                     getPumpList(listings),
                     getGradiatedPumtList(migrated)
                 ])
+                const data = {}
+                if (pumpList.status === 'fulfilled')
+                    Object.assign(data, { pump: pumpList.value })
+                if (migratedPumpList.status === 'fulfilled')
+                    Object.assign(data, { migrated: migratedPumpList.value })
 
-                const lists = {
-                    graduated: pumpList
-                }
+                console.log(data)
 
-                this.io.to(socketId).emit('pumpList', lists);
+                this.io.to(socketId).emit('pumpList', data);
             }
         } catch (error) {
             console.log(`Error@PumpSocket -> sendPumpList: ${error}`);
@@ -62,7 +56,7 @@ class PumpSocket {
             console.log({ isBusy: this.isBusy })
             if (!this.isBusy)
                 await this.sendPumpList();
-        }, 5000); // Sends updates every 5 seconds
+        }, 5000);
     }
 
     public stopInterval() {

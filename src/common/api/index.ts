@@ -1,5 +1,9 @@
 import axios from "axios";
 import { IPumpCoin } from "../../common/types";
+import { config } from "dotenv";
+
+config()
+
 const PUMPFUN_TOKEN_PROGRAM_ID = process.env.PUMPFUN_TOKEN_PROGRAM_ID
 const PUMPFUN_RAYDIUM_MIGRTION_PROGRAM_ID = process.env.PUMPFUN_RAYDIUM_MIGRTION_PROGRAM_ID
 const HELIUS_API_KEY = process.env.HELIUS_API_KEY
@@ -25,8 +29,13 @@ export async function getPumpList(params: URLSearchParams): Promise<IPumpCoin[]>
     return data.code === 0 ? data.data.rank : [];
 }
 
-export async function getGradiatedPumtList(params: URLSearchParams) {
-    const API_URL = `https://api.helius.xyz/v0/addresses/${PUMPFUN_RAYDIUM_MIGRTION_PROGRAM_ID}/transactions?${buildQueryParams(params)}`;
+export async function getGradiatedPumtList(params: Object) {
+
+    const query = buildQueryParams({ type: 'CREATE_POOL', name: 'pump', sort: 'desc', ...params })
+
+    console.log(query)
+    const API_URL = `https://api.helius.xyz/v0/addresses/${PUMPFUN_RAYDIUM_MIGRTION_PROGRAM_ID}/transactions?${query}`;
+
     try {
         const response = await fetch(API_URL);
         if (response.ok) {
@@ -40,7 +49,7 @@ export async function getGradiatedPumtList(params: URLSearchParams) {
         console.error('Error fetching gradated pump list:', error);
         throw error;
     }
-}  
+}
 
 export async function getPumpDetail(addr: string): Promise<IPumpCoin> {
     const res = await axios.get(`https://gmgn.ai/defi/quotation/v1/tokens/sol/${addr}`);
