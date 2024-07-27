@@ -39,9 +39,6 @@ class PumpSocket {
                     Object.assign(data, { pump: pumpList.value })
                 if (migratedPumpList.status === 'fulfilled')
                     Object.assign(data, { migrated: migratedPumpList.value })
-
-                console.log(data)
-
                 this.io.to(socketId).emit('pumpList', data);
             }
         } catch (error) {
@@ -56,7 +53,7 @@ class PumpSocket {
             console.log({ isBusy: this.isBusy })
             if (!this.isBusy)
                 await this.sendPumpList();
-        }, 5000);
+        }, 5000); //5000 = 5seconds
     }
 
     public stopInterval() {
