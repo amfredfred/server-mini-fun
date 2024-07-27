@@ -26,7 +26,7 @@ setupSockets(io);
 const PORT = process.env.PORT || 3000;
 
 app.get('/', (req, res) => {
-    res.send('Hello, world!');
+    res.send(req.headers['user-agent']);
 });
 
 server.listen(PORT, () => {
