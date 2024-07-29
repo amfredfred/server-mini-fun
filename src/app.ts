@@ -3,6 +3,7 @@ import http from 'http';
 import { Server } from 'socket.io';
 import { setupSockets } from './socket';
 import cors from 'cors'
+import axios from 'axios';
 
 const corsOptions = {
     origin: ['*'],
@@ -16,7 +17,7 @@ app.options('*', cors(corsOptions));
 const server = http.createServer(app);
 const io = new Server(server, {
     cors: {
-        origin:"*",
+        origin: "*",
         methods: ['GET', 'HEAD', 'POST']
     }
 });
@@ -28,6 +29,7 @@ const PORT = process.env.PORT || 3000;
 app.get('/', (req, res) => {
     res.send(req.headers['user-agent']);
 });
+
 
 server.listen(PORT, () => {
     console.log(`Server is running on port ${PORT}`);
