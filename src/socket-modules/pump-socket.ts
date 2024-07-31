@@ -39,6 +39,7 @@ class PumpSocket {
                     Object.assign(data, { pump: pumpList.value })
                 if (migratedPumpList.status === 'fulfilled')
                     Object.assign(data, { migrated: migratedPumpList.value })
+                console.log(data)
                 this.io.to(socketId).emit('pumpList', data);
             }
         } catch (error) {
