@@ -27,9 +27,10 @@ class PumpSocket {
 
     private async sendPumpList() {
         try {
+            console.log(this.searchParams)
             this.isBusy = true
             for (const [socketId, { filter_listing, filter_migrated }] of this.searchParams.entries()) {
-                console.log({ socketId, filter_listing, filter_migrated })
+                // console.log({ socketId, filter_listing, filter_migrated })
                 const [pumpList, migratedPumpList] = await Promise.allSettled([
                     getPumpList(filter_listing),
                     getGradiatedPumtList(filter_migrated)
@@ -39,7 +40,6 @@ class PumpSocket {
                     Object.assign(data, { pump: pumpList.value })
                 if (migratedPumpList.status === 'fulfilled')
                     Object.assign(data, { migrated: migratedPumpList.value })
-                console.log(data)
                 this.io.to(socketId).emit('pumpList', data);
             }
         } catch (error) {
