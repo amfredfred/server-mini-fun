@@ -27,7 +27,6 @@ class PumpSocket {
 
     private async sendPumpList() {
         try {
-            console.log(this.searchParams)
             this.isBusy = true
             for (const [socketId, { filter_listing, filter_migrated }] of this.searchParams.entries()) {
                 // console.log({ socketId, filter_listing, filter_migrated })
@@ -51,9 +50,7 @@ class PumpSocket {
 
     private startInterval() {
         this.intervalId = setInterval(async () => {
-            console.log({ isBusy: this.isBusy })
-            if (!this.isBusy)
-                await this.sendPumpList();
+            if (!this.isBusy) await this.sendPumpList();
         }, 5000); //5000 = 5seconds
     }
 

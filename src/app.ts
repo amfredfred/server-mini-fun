@@ -3,7 +3,6 @@ import http from 'http';
 import { Server } from 'socket.io';
 import { setupSockets } from './socket';
 import cors from 'cors'
-import axios from 'axios';
 
 const corsOptions = {
     origin: ['*'],

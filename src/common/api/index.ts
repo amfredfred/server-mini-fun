@@ -80,6 +80,7 @@ export async function getGradiatedPumtList(params: Object) {
             })
             const metadataResponse = await metadata.json()
             const fomartedMesta = extractRelevantData(metadataResponse)
+            // console.log({ metadata: metadataResponse?.[0]?.onChainMetadata })
             return fomartedMesta;
         } else {
             console.error('Failed to fetch transactions:', response.statusText);
