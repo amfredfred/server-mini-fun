@@ -1,12 +1,21 @@
 {
     "compilerOptions": {
-        "target": "ES6",
-        "module": "commonjs",
         "strict": true,
-        "esModuleInterop": true,
         "skipLibCheck": true,
         "forceConsistentCasingInFileNames": true,
         "outDir": "./dist",
+        "lib": [
+            "es5",
+            "es6"
+        ],
+        "target": "es5",
+        "module": "commonjs",
+        "moduleResolution": "node",
+        "emitDecoratorMetadata": true,
+        "experimentalDecorators": true,
+        // "sourceMap": true,
+        "esModuleInterop": true,
+        "allowSyntheticDefaultImports": true,
     },
     "include": [
         "src/**/*"

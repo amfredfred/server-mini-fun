@@ -23,12 +23,8 @@ const io = new Server(server, {
 
 setupSockets(io);
 
-const PORT = process.env.PORT || 3000;
-
 app.get('/', (req, res) => {
     res.send(req.headers['user-agent']);
 });
 
-server.listen(PORT, () => {
-    console.log(`Server is running on port ${PORT}`);
-});
+export default server
