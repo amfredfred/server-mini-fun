@@ -14,29 +14,40 @@ class PumpSocket {
     }
 
     private onConnection(socket: Socket) {
+
+
         socket.on('requestPumpList', async ({ filter_listing, filter_migrated }) => {
-            this.searchParams.set(socket.id, { filter_listing, filter_migrated });
-            await this.sendPumpList();
+            if (!this.searchParams.get(socket.id)) {
+                this.searchParams.set(socket.id, { filter_listing, filter_migrated });
+                await this.sendPumpList();
+            }
         });
 
         socket.on('disconnect', () => {
-            this.searchParams.delete(socket.id);
+            if (this.searchParams.get(socket.id))
+                this.searchParams.delete(socket.id);
         });
     }
 
     private async sendPumpList() {
         try {
             this.isBusy = true;
-            for (const [socketId, { filter_listing, filter_migrated }] of this.searchParams.entries()) {
+            const socketEntries = Array.from(this.searchParams.entries());
+            const promises = socketEntries.map(async ([socketId, { filter_listing, filter_migrated }]) => {
                 const [pumpList, migratedPumpList] = await Promise.allSettled([
                     getPumpList(filter_listing),
                     getGradiatedPumtList(filter_migrated)
                 ]);
-                const data = {};
-                if (pumpList.status === 'fulfilled') Object.assign(data, { pump: pumpList.value });
-                if (migratedPumpList.status === 'fulfilled') Object.assign(data, { migrated: migratedPumpList.value });
+                const data: any = {};
+                if (pumpList.status === 'fulfilled') {
+                    data.pump = pumpList.value;
+                }
+                if (migratedPumpList.status === 'fulfilled') {
+                    data.migrated = migratedPumpList.value;
+                }
                 this.io.to(socketId).emit('pumpList', data);
-            }
+            });
+            await Promise.allSettled(promises);
         } catch (error) {
             console.log(`Error@PumpSocket -> sendPumpList: ${error}`);
         } finally {
