@@ -1,5 +1,5 @@
 import { Server, Socket } from 'socket.io';
-import { getGradiatedPumtList, getPumpList } from '../common/api';
+import { getGradiatedPumpList, getPumpList } from '../common/api';
 
 class PumpSocket {
     private io: Server;
@@ -36,7 +36,7 @@ class PumpSocket {
             const promises = socketEntries.map(async ([socketId, { filter_listing, filter_migrated }]) => {
                 const [pumpList, migratedPumpList] = await Promise.allSettled([
                     getPumpList(filter_listing),
-                    getGradiatedPumtList(filter_migrated)
+                    getGradiatedPumpList(filter_migrated)
                 ]);
                 const data: any = {};
                 if (pumpList.status === 'fulfilled') {
