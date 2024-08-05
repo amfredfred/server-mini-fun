@@ -20,12 +20,12 @@ export async function getGradiatedPumpList(params: object): Promise<IPumpTokenIt
     const query = buildQueryParams({ type: 'CREATE_POOL', limit: 30, sort: 'desc', ...params });
     const API_URL = `https://api.helius.xyz/v0/addresses/${PUMPFUN_RAYDIUM_MIGRATION_PROGRAM_ID}/transactions?${query}`;
     try {
-        const response = await fetch(API_URL);
-        if (!response.ok) {
+        const response = await axios.get(API_URL);
+        if (!(response.status == 200)) {
             console.error('Failed to fetch transactions:', response.statusText);
             throw new Error(`API request failed with status ${response.status}`);
         }
-        const data = await response.json();
+        const data = await response.data;
         const tokens = formatResponse(data as string[]);
         const tokenDetailsPromises = tokens.map(fetchTokenDetails);
         const tokensAndDetails = await Promise.allSettled(tokenDetailsPromises);
