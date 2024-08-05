@@ -3,7 +3,7 @@
         "strict": true,
         "skipLibCheck": true,
         "forceConsistentCasingInFileNames": true,
-        "outDir": "./src/dist",
+        "outDir": "dist",
         "lib": [
             "es5",
             "es6"
@@ -18,7 +18,7 @@
     },
     "include": [
         "src/**/*"
-    ],
+, "dist"    ],
     "exclude": [
         "node_modules"
     ]
