@@ -2,26 +2,20 @@
   "name": "server",
   "version": "1.0.0",
   "description": "",
-  "main": "dist/bin/serve.js",
+  "main": "src/dist/bin/serve.js",
   "scripts": {
     "dev": "ts-node-dev --respawn --transpile-only src/bin/serve.ts",
     "build": "tsc",
-    "start": "node dist/bin/serve.js",
+    "start": "node src/dist/bin/serve.js",
     "sol": "ts-node-dev --respawn --transpile-only test-main.ts"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@metaplex-foundation/js": "^0.20.1",
-    "@raydium-io/raydium-sdk": "^1.3.1-beta.58",
-    "@solana/spl-token": "^0.4.8",
-    "@solana/web3.js": "^1.95.1",
     "axios": "^1.7.2",
     "dotenv": "^16.4.5",
     "express": "^4.19.2",
-    "pg": "^8.12.0",
-    "postgres": "^3.4.4",
     "socket.io": "^4.7.5",
     "tsconfig-paths": "^4.2.0",
     "tsconfig-paths-webpack-plugin": "^4.1.0",
@@ -33,7 +27,6 @@
     "@types/node": "^20.14.11",
     "@types/pg": "^8.11.6",
     "@types/socket.io": "^3.0.2",
-    "@types/ws": "^8.5.11",
     "ts-node-dev": "^2.0.0",
     "typescript": "^5.5.4"
   }
