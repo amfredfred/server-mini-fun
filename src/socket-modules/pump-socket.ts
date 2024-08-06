@@ -4,8 +4,8 @@ import { getGradiatedPumpList, getPumpList } from '../common/api';
 class PumpSocket {
     private io: Server;
     private intervalId: NodeJS.Timeout | null = null;
-    private searchParams = new Map<string, { filter_listing: URLSearchParams, filter_migrated: URLSearchParams }>();
     private isBusy: boolean = false;
+    private room: string = 'pUmpRooM'
 
     constructor(io: Server) {
         this.io = io;
@@ -14,40 +14,31 @@ class PumpSocket {
     }
 
     private onConnection(socket: Socket) {
-
-
-        socket.on('requestPumpList', async ({ filter_listing, filter_migrated }) => {
-            if (!this.searchParams.get(socket.id)) {
-                this.searchParams.set(socket.id, { filter_listing, filter_migrated });
-                await this.sendPumpList();
-            }
+        socket.join(this.room);
+        socket.on('requestPumpList', async () => {
+            await this.sendPumpList(new URLSearchParams(), new URLSearchParams());
         });
 
         socket.on('disconnect', () => {
-            if (this.searchParams.get(socket.id))
-                this.searchParams.delete(socket.id);
+            // Optionally handle cleanup if needed
         });
     }
 
-    private async sendPumpList() {
+    private async sendPumpList(filter_listing: URLSearchParams, filter_migrated: URLSearchParams) {
         try {
             this.isBusy = true;
-            const socketEntries = Array.from(this.searchParams.entries());
-            const promises = socketEntries.map(async ([socketId, { filter_listing, filter_migrated }]) => {
-                const [pumpList, migratedPumpList] = await Promise.allSettled([
-                    getPumpList(filter_listing),
-                    getGradiatedPumpList(filter_migrated)
-                ]);
-                const data: any = {};
-                if (pumpList.status === 'fulfilled') {
-                    data.pump = pumpList.value;
-                }
-                if (migratedPumpList.status === 'fulfilled') {
-                    data.migrated = migratedPumpList.value;
-                }
-                this.io.to(socketId).emit('pumpList', data);
-            });
-            await Promise.allSettled(promises);
+            const [pumpList, migratedPumpList] = await Promise.allSettled([
+                getPumpList(filter_listing),
+                getGradiatedPumpList(filter_migrated)
+            ]);
+            const data: any = {};
+            if (pumpList.status === 'fulfilled') {
+                data.pump = pumpList.value;
+            }
+            if (migratedPumpList.status === 'fulfilled') {
+                data.migrated = migratedPumpList.value;
+            }
+            this.io.to(this.room).emit('pumpList', data);
         } catch (error) {
             console.log(`Error@PumpSocket -> sendPumpList: ${error}`);
         } finally {
@@ -57,7 +48,9 @@ class PumpSocket {
 
     private startInterval() {
         this.intervalId = setInterval(async () => {
-            if (!this.isBusy) await this.sendPumpList();
+            if (!this.isBusy) {
+                await this.sendPumpList(new URLSearchParams(), new URLSearchParams());
+            }
         }, 5000);
     }
 
