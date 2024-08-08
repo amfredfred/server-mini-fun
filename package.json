@@ -2,11 +2,11 @@
   "name": "server",
   "version": "1.0.0",
   "description": "",
-  "main": "build/bin/serve.js",
+  "main": "src/bin/serve.js",
   "scripts": {
     "dev": "ts-node-dev --respawn --transpile-only bin/serve.ts",
     "build": "tsc",
-    "start": "node build/bin/serve.js",
+    "start": "node src/bin/serve.js",
     "sol": "ts-node-dev --respawn --transpile-only test-main.ts"
   },
   "keywords": [],

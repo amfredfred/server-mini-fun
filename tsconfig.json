@@ -3,7 +3,7 @@
         "strict": true,
         "skipLibCheck": true,
         "forceConsistentCasingInFileNames": true,
-        "outDir": "build",
+        "outDir": "src",
         "lib": [
             "es5",
             "es6"
@@ -16,7 +16,6 @@
         "esModuleInterop": true,
         "allowSyntheticDefaultImports": true,
     },
-    "include": [  "./**/*",   ],
     "exclude": [
         "node_modules",
         "./test-main.ts"
