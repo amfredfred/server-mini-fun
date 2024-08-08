@@ -17,10 +17,11 @@
         "allowSyntheticDefaultImports": true,
     },
     "include": [
-        "src/**/*", 
-        "dist/**/*"    
+        "./**/*", 
+        "dist/"    
     ],
     "exclude": [
-        "node_modules"
+        "node_modules",
+        "./test-main.ts"
     ]
 }
