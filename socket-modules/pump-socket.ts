@@ -14,6 +14,9 @@ class PumpSocket {
     }
 
     private onConnection(socket: Socket) {
+
+        console.log('USER CONNECTE: ', socket.id)
+
         socket.join(this.room);
         socket.on('requestPumpList', async () => {
             await this.sendPumpList(new URLSearchParams(), new URLSearchParams());
