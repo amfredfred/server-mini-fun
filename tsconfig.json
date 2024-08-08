@@ -3,7 +3,7 @@
         "strict": true,
         "skipLibCheck": true,
         "forceConsistentCasingInFileNames": true,
-        "outDir": "src",
+        "outDir": "dist", 
         "lib": [
             "es5",
             "es6"
@@ -12,9 +12,8 @@
         "moduleResolution": "node",
         "emitDecoratorMetadata": true,
         "experimentalDecorators": true,
-        // "sourceMap": true,
         "esModuleInterop": true,
-        "allowSyntheticDefaultImports": true,
+        "allowSyntheticDefaultImports": true
     },
     "exclude": [
         "node_modules",

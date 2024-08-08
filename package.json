@@ -2,11 +2,11 @@
   "name": "server",
   "version": "1.0.0",
   "description": "",
-  "main": "src/bin/serve.js",
+  "main": "dist/bin/serve.js",
   "scripts": {
-    "dev": "ts-node-dev --respawn --transpile-only bin/serve.ts",
+    "dev": "ts-node-dev --respawn --transpile-only src/bin/serve.ts",
     "build": "tsc",
-    "start": "node src/bin/serve.js",
+    "start": "node dist/bin/serve.js",
     "sol": "ts-node-dev --respawn --transpile-only test-main.ts"
   },
   "keywords": [],
@@ -29,5 +29,8 @@
     "@types/socket.io": "^3.0.2",
     "ts-node-dev": "^2.0.0",
     "typescript": "^5.5.4"
+  },
+  "engines": {
+    "node": "20.x"
   }
 }
